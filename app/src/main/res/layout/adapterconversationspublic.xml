@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     android:id="@+id/user_first_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -99,13 +99,22 @@
                     android:background="@android:color/transparent"
                     />
 
-                <android.support.v7.widget.AppCompatTextView
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+                    android:id="@+id/contenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@+id/viewbis3_mou_baka"/>
+
+                <!--android.support.v7.widget.AppCompatTextView
                     android:id="@+id/contenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/viewbis3_mou_baka"
                     android:layout_marginLeft="10dp"
-                    />
+
+                    emojicon:emojiconSize="28sp"
+                    /-->
 
 
 

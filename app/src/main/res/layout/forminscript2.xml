@@ -78,6 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/inscript_nom"
+                    android:inputType="text"
                     />
 
             </LinearLayout>
@@ -106,12 +107,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/inscript_prenom"
+                    android:inputType="text"
                     />
 
             </LinearLayout>
 
+
             <LinearLayout
-                android:id="@+id/naissance_block"
+                android:id="@+id/sexe_block"
                 android:layout_below="@+id/prenom_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,38 +122,8 @@
                 android:layout_marginTop="10dp"
                 >
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_event_note_black_36dp"
-                    android:tint="@color/colorPrimary"
-                    android:layout_gravity="center"
-                    />
-
-                <TextView
-                    android:id="@+id/naissance2"
-                    android:layout_width="0dp"
-                    android:background="@android:color/transparent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight=".5"
-                    android:clickable="false"
-                    android:hint="@string/inscript_naissance"
-                    />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/sexe_block"
-                android:layout_below="@+id/naissance_block"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                >
-
                 <RadioGroup
+                    android:id="@+id/monsexe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -179,7 +152,7 @@
                 android:layout_below="@+id/sexe_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/inscript_finish"
+                android:text="@string/inscript_next"
                 android:background="@color/colorPrimary"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/white"

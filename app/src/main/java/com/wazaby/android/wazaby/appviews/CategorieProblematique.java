@@ -105,8 +105,6 @@ public class CategorieProblematique extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fab = findViewById(R.id.fab);
 
-
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -357,13 +355,14 @@ public class CategorieProblematique extends AppCompatActivity {
 
     private void ConnexionProblematiqueUpdate()
     {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Const.URL_PROBLEMATIQUE_UPDATE,
+        String url93939393 = Const.dns+"/WazzabyApi/public/api/displayproblematique?ID="+String.valueOf(ID_user)+"&ID_prob="+String.valueOf(ID_prob);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url93939393,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         pDialog.dismiss();
                         database.addLibelleroProblematique(Libelle);
-                        database.UpdateIDPROB(database.getUSER(Integer.valueOf(session.getUserDetail().get(SessionManager.Key_ID))).getID(),ID_prob);
+                        database.UpdateIDPROB(database.getUSER(Integer.valueOf(session.getUserDetail().get(SessionManager.Key_ID))).getID(),ID_prob,Libelle);
                         Intent intent = new Intent(CategorieProblematique.this,Home.class);
                         startActivity(intent);
                     }
@@ -469,8 +468,8 @@ public class CategorieProblematique extends AppCompatActivity {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("ID_User",String.valueOf(ID_user));
-                params.put("ID_Prob",String.valueOf(ID_prob));
+                /*params.put("ID_User",String.valueOf(ID_user));
+                params.put("ID_Prob",String.valueOf(ID_prob));*/
                 return params;
             }
 

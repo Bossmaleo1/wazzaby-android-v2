@@ -18,6 +18,8 @@ import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -80,6 +82,10 @@ public class Connexion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connexion);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        //getWindow().setWindowAnimations(R.anim.slide_in);
+        /*Animation anim = AnimationUtils.loadAnimation(this,R.anim.fadeout1);
+        findViewById(R.id.coordinatorLayout).startAnimation(anim);*/
         res = getResources();
         about = (TextView)findViewById(R.id.about);
         aboutblock = (LinearLayout)findViewById(R.id.aboutblock);
@@ -99,6 +105,7 @@ public class Connexion extends AppCompatActivity {
         getSupportActionBar().setTitle(res.getString(R.string.app_name));
         session = new SessionManager(this);
 
+        //setTheme(android.R.style.Theme);
         //Instanciata de la classe DatabaseHandler
         database = new DatabaseHandler(this);
 
@@ -150,6 +157,8 @@ public class Connexion extends AppCompatActivity {
                 //ControleGPS();
                 Intent intent = new Intent(getApplicationContext(),forminscript3.class);
                 startActivity(intent);
+                /*Intent intent = new Intent(getApplicationContext(),UploadImage.class);
+                startActivity(intent);*/
                 return true;
         }
 
@@ -311,7 +320,6 @@ public class Connexion extends AppCompatActivity {
 
     public void showJSON(String response)
     {
-        Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
         try {
              reponse = new JSONObject(response);
              succes = reponse.getInt("succes");

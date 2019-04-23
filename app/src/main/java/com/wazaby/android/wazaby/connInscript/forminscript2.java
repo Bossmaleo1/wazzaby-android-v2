@@ -2,24 +2,45 @@ package com.wazaby.android.wazaby.connInscript;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.wazaby.android.wazaby.R;
+import com.wazaby.android.wazaby.model.Const;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by bossmaleo on 25/08/17.
@@ -30,20 +51,12 @@ public class forminscript2 extends AppCompatActivity{
     private Toolbar toolbar;
     private Resources res;
     private Button send;
-    private EditText email;
+    private String sexe;
+    private EditText nom;
+    private EditText prenom;
     private Intent intent;
-    private TextView naissance;
-    private LinearLayout naissance_block;
-    private int day;
-    private int month;
-    private int year;
-
-    private int heure;
-    private int minute;
-    private int seconde;
-
-
-    static final int DATE_DIALOG_ID = 999;
+    private RadioGroup monsexeradioGroup;
+    private CoordinatorLayout coordinatorLayout;
 
 
     @Override
@@ -51,22 +64,64 @@ public class forminscript2 extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forminscript2);
         res = getResources();
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
+        Animation anim = AnimationUtils.loadAnimation(this,R.anim.slide_in);
+        findViewById(R.id.coordinatorLayout).startAnimation(anim);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         send = (Button)findViewById(R.id.send);
-        email = (EditText)findViewById(R.id.email);
-        //intent = getIntent();
-        naissance = (TextView) findViewById(R.id.naissance2);
-        naissance_block = (LinearLayout) findViewById(R.id.naissance_block);
+        nom = (EditText)findViewById(R.id.nom);
+        prenom = (EditText)findViewById(R.id.prenom);
+        monsexeradioGroup = (RadioGroup) findViewById(R.id.monsexe);
+        intent = getIntent();
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(res.getString(R.string.inscript1_1));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setCurrentDateOnView();
-        addListenerOnButton();
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),forminscript3.class);
-                startActivity(intent);
+                if (validate()==true) {
+                    int radioButtonID = monsexeradioGroup.getCheckedRadioButtonId();
+                    View radioButton = monsexeradioGroup.findViewById(radioButtonID);
+                    int idx = monsexeradioGroup.indexOfChild(radioButton);
+                    RadioButton r = (RadioButton) monsexeradioGroup.getChildAt(idx);
+                    String selectedtext = r.getText().toString();
+                    if (selectedtext.trim().equals("Masculin")) {
+                        sexe = "H";
+                    }else if (selectedtext.trim().equals("Feminin")) {
+                        sexe = "F";
+                    }
+                    Intent intent1 = new Intent(getApplicationContext(),forinscript4.class);
+                    intent1.putExtra("sexe",sexe);
+                    intent1.putExtra("prenom",String.valueOf(prenom.getText()));
+                    intent1.putExtra("nom",String.valueOf(nom.getText()));
+                    intent1.putExtra("code",intent.getStringExtra("code"));
+                    intent1.putExtra("email",intent.getStringExtra("email"));
+                    startActivity(intent1);
+                }
+                /*int radioButtonID = monsexe.getCheckedRadioButtonId();
+                View radioButton = monsexe.findViewById(radioButtonID);
+                int idx = monsexe.indexOfChild(radioButton);
+                RadioButton r = (RadioButton) monsexe.getChildAt(idx);
+                String selectedtext = r.getText().toString();
+                if (selectedtext.trim().equals("Masculin")) {
+                    sexe = 'H';
+                }else if (selectedtext.trim().equals("Feminin")) {
+                    sexe = 'F';
+                }
+
+                String datedenaissanceLibelle;
+                datedenaissanceLibelle = String.valueOf(naissance.getText()).split("/")[2]+"-"+String.valueOf(naissance.getText()).split("/")[1]+"-"+String.valueOf(naissance.getText()).split("/")[0];
+                String url = Const.dns+"/WazzabyApi/public/api/insertUsers?nom="+
+                        +"&prenom="++"&email="++"&codedevalidation="
+                        ++"&sexe="+sexe+"&password="+String.valueOf(password.getText().toString())
+                        +"&date="+datedenaissanceLibelle;
+                pDialog = new ProgressDialog(forminscript2.this);
+                pDialog.setMessage("Chargement en cours...");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(false);
+                pDialog.show();
+                CreateUser(url);*/
             }
         });
     }
@@ -77,9 +132,9 @@ public class forminscript2 extends AppCompatActivity{
         switch (item.getItemId()) {
             case android.R.id.home:
                 // User chose the "Settings" item, show the app settings UI...
-                Intent _result = new Intent(getApplicationContext(),Connexion.class);
-
-                startActivity(_result);
+                Intent i = new Intent();
+                setResult(RESULT_OK, i);
+                finish();
                 return true;
 
 
@@ -92,76 +147,49 @@ public class forminscript2 extends AppCompatActivity{
         }
     }
 
-
-
-    public void setCurrentDateOnView() {
-        final Calendar c = Calendar.getInstance();
-        year = c.get(Calendar.YEAR);
-        month = c.get(Calendar.MONTH);
-        day = c.get(Calendar.DAY_OF_MONTH);
-/*
-        heure = c.get(Calendar.HOUR);
-        minute = c.get(Calendar.MINUTE);*/
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_DIALOG_ID:
-                // set date picker as current date
-                return new DatePickerDialog(this, datePickerListener,
-                        year, month,day);
-        }
-        return null;
-    }
-
-    private DatePickerDialog.OnDateSetListener datePickerListener
-            = new DatePickerDialog.OnDateSetListener() {
-
-        // when dialog box is closed, below method will be called.
-        public void onDateSet(DatePicker view, int selectedYear,
-                              int selectedMonth, int selectedDay) {
-            year = selectedYear;
-            month = selectedMonth+1;
-            day = selectedDay;
-
-            if(month>9 && day>9) {
-                naissance.setText(day + "/" + month + "/" + year);
-            }else if(day<9 && month>9)
-            {
-                naissance.setText("0"+day + "/" + month + "/" + year);
-            }else if(month<9 && day>9)
-            {
-                naissance.setText(day + "/0" + month + "/" + year);
-            }
-            else if(month<9 && day<9)
-            {
-                naissance.setText("0"+day + "/0" + month + "/" + year);
-            }
-        }
-    };
-
-    //ajouter la boîte de dialogue Calendrier
-    public void addListenerOnButton() {
-
-
-        naissance_block.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                showDialog(DATE_DIALOG_ID);
-
-            }
-
-        });
-    }
-
-
     @Override
     public void onBackPressed() {
-        Intent _result = new Intent(getApplicationContext(),Connexion.class);
-        startActivity(_result);
+        Intent i = new Intent();
+        setResult(RESULT_OK, i);
+        finish();
     }
+
+
+    public boolean validate() {
+        boolean valid = true;
+        String _nom  = nom.getText().toString();
+        String _prenom = prenom.getText().toString();
+
+        int radioButtonID = monsexeradioGroup.getCheckedRadioButtonId();
+        View radioButton = monsexeradioGroup.findViewById(radioButtonID);
+        int idx = monsexeradioGroup.indexOfChild(radioButton);
+        RadioButton r = (RadioButton) monsexeradioGroup.getChildAt(idx);
+        String selectedtext = r.getText().toString();
+
+        if (selectedtext.trim().isEmpty()) {
+            Toast.makeText(forminscript2.this,res.getString(R.string.inscript_sexe),Toast.LENGTH_LONG).show();
+            valid = false;
+        }
+
+        if (_nom.isEmpty()) {
+            nom.setError(res.getString(R.string.nom_error));
+            valid = false;
+        }else {
+            nom.setError(null);
+        }
+
+        if (_prenom.isEmpty()) {
+            prenom.setError(res.getString(R.string.prenom_error));
+            valid = false;
+        }else {
+            prenom.setError(null);
+        }
+
+
+        return valid;
+    }
+
+
+
 
 }

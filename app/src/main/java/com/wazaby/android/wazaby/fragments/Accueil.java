@@ -19,9 +19,9 @@ public class Accueil extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        View inflatedView = inflater.inflate(R.layout.accueil, container, false);
+        final View inflatedView = inflater.inflate(R.layout.accueil, container, false);
 
         final TabLayout tabLayout = (TabLayout) inflatedView.findViewById(R.id.tabs);
         tabLayout.addTab(tabLayout.newTab().setText(""));
@@ -74,7 +74,14 @@ public class Accueil extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                if(tab.getPosition()==0)
+                {
+                    Conversationspublic.recyclerView.smoothScrollToPosition(0);
+                    /*Toast.makeText(getActivity(),"Hello boss 1 is reselected",Toast.LENGTH_LONG).show();
+                    View bossmaleo =  inflater.inflate(R.layout.conversationspublic, container, false);
+                    RecyclerView recyclerView = bossmaleo.findViewById(R.id.my_recycler_view);
+                    recyclerView.smoothScrollToPosition(0);*/
+                }
             }
         });
 

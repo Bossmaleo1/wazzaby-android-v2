@@ -116,12 +116,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Modifier id_user
-    public void UpdateIDPROB(int IDUSER,int name)
+    public void UpdateIDPROB(int IDUSER,int name,String libelle_prob)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_IDPROB,name);
+        values.put(KEY_LIBELLEPROB,libelle_prob);
+        db.update(TABLE_USER,values, KEY_ID+"="+IDUSER, null);
+    }
+
+    public void UpdatePhoto(int IDUSER,String photo)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_PHOTO,photo);
+        db.update(TABLE_USER,values, KEY_ID+"="+IDUSER, null);
+    }
+
+    public void UpdateKeyPush(int IDUSER,String keypush)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_KEYPUSH,keypush);
         db.update(TABLE_USER,values, KEY_ID+"="+IDUSER, null);
     }
 

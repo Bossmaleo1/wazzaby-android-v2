@@ -2,6 +2,7 @@ package com.wazaby.android.wazaby.appviews;
 
 import java.util.Calendar;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -9,15 +10,20 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -75,8 +81,9 @@ public class AfficheCommentairePublic extends AppCompatActivity{
     private List<displaycommentary> data = new ArrayList<>();
     private Intent intent;
     private displaycommentaryadapter allUsersAdapter;
-    private EditText editcomment;
-    private ImageView submitcomment;
+    private FloatingActionButton fab;
+    /*private EditText editcomment;
+    private ImageView submitcomment;*/
     private Profil user;
     private Calendar cal = Calendar.getInstance();
     private String Libelle = null;
@@ -93,6 +100,9 @@ public class AfficheCommentairePublic extends AppCompatActivity{
     private String Heure1;
     private String Secondes;
     private int postion1;
+    private LayoutInflater inflater;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +113,11 @@ public class AfficheCommentairePublic extends AppCompatActivity{
         session = new SessionManager(getApplicationContext());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressBar = (ProgressBar)findViewById(R.id.progressbar);
+        fab = (FloatingActionButton)findViewById(R.id.fab);
         intent = getIntent();
         context = this;
-        editcomment = (EditText)findViewById(R.id.editcomment);
-        submitcomment = (ImageView)findViewById(R.id.submitcomment);
+        //editcomment = (EditText)findViewById(R.id.editcomment);
+        //submitcomment = (ImageView)findViewById(R.id.submitcomment);
         user = database.getUSER(Integer.valueOf(session.getUserDetail().get(SessionManager.Key_ID)));
         setSupportActionBar(toolbar);
         Drawable maleoIcon = res.getDrawable(R.drawable.ic_close_black_24dp);
@@ -123,7 +134,43 @@ public class AfficheCommentairePublic extends AppCompatActivity{
         recyclerView.setAdapter(allUsersAdapter);
         year = cal.getTime().getYear();
         this.Connexion();
-        submitcomment.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+                View mView = layoutInflaterAndroid.inflate(R.layout.dialog_add_comment, null);
+                AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(context);
+                alertDialogBuilderUserInput.setView(mView);
+
+                final EditText userInputDialogEditText = (EditText) mView.findViewById(R.id.userInputDialog);
+                alertDialogBuilderUserInput
+                        .setCancelable(false)
+                        .setPositiveButton(res.getString(R.string.add_comment), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogBox, int id) {
+                                displaycommentary commentary = new displaycommentary("http://wazzaby.com/uploads/photo_de_profil/"+user.getPHOTO(),context,R.drawable.ic_done_black_18dp
+                                        ,"A l'instant",R.color.greencolor,0,userInputDialogEditText.getText().toString(),
+                                        user.getPRENOM()+" "+user.getNOM());
+                                data.add(commentary);
+                                allUsersAdapter.notifyDataSetChanged();
+                                Libelle = userInputDialogEditText.getText().toString();
+                                SENDCommentary();
+                                dialogBox.dismiss();
+                                userInputDialogEditText.setText("");
+                            }
+                        })
+
+                        .setNegativeButton(res.getString(R.string.cancel_comment),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialogBox, int id) {
+                                        dialogBox.cancel();
+                                    }
+                                });
+
+                AlertDialog alertDialogAndroid = alertDialogBuilderUserInput.create();
+                alertDialogAndroid.show();
+            }
+        });
+        /*submitcomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
@@ -144,7 +191,7 @@ public class AfficheCommentairePublic extends AppCompatActivity{
                 SENDCommentary();
                 editcomment.setText("");
             }
-        });
+        });*/
 
     }
 
@@ -308,8 +355,9 @@ public class AfficheCommentairePublic extends AppCompatActivity{
 
     private void SENDCommentary()
     {
+        String url = Const.dns+"/WazzabyApi/public/api/addComment?id_user="+String.valueOf(user.getID())+"&id_messagepublic="+String.valueOf(intent.getIntExtra("nom",0))+"&libelle_comment="+Libelle;
         progressBar.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Const.URL_COMMENT,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -320,106 +368,12 @@ public class AfficheCommentairePublic extends AppCompatActivity{
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        if(error instanceof ServerError)
-                        {
-                            snackbar = Snackbar
-                                    .make(coordinatorLayout, res.getString(R.string.error_volley_servererror), Snackbar.LENGTH_LONG)
-                                    .setAction(res.getString(R.string.try_again), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Connexion();
-                                        }
-                                    });
-
-                            snackbar.show();
-                            progressBar.setVisibility(View.GONE);
-                        }else if(error instanceof NetworkError)
-                        {
-                            snackbar = Snackbar
-                                    .make(coordinatorLayout, res.getString(R.string.error_volley_servererror), Snackbar.LENGTH_LONG)
-                                    .setAction(res.getString(R.string.try_again), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Connexion();
-                                        }
-                                    });
-
-                            snackbar.show();
-                            progressBar.setVisibility(View.GONE);
-                        }else if(error instanceof AuthFailureError)
-                        {
-                            snackbar = Snackbar
-                                    .make(coordinatorLayout, res.getString(R.string.error_volley_servererror), Snackbar.LENGTH_LONG)
-                                    .setAction(res.getString(R.string.try_again), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Connexion();
-                                        }
-                                    });
-
-                            snackbar.show();
-                            progressBar.setVisibility(View.GONE);
-                        }else if(error instanceof ParseError)
-                        {
-                            snackbar = Snackbar
-                                    .make(coordinatorLayout, res.getString(R.string.error_volley_servererror), Snackbar.LENGTH_LONG)
-                                    .setAction(res.getString(R.string.try_again), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Connexion();
-                                        }
-                                    });
-
-                            snackbar.show();
-                            progressBar.setVisibility(View.GONE);
-                        }else if(error instanceof NoConnectionError)
-                        {
-                            snackbar = Snackbar
-                                    .make(coordinatorLayout, res.getString(R.string.error_volley_noconnectionerror), Snackbar.LENGTH_LONG)
-                                    .setAction(res.getString(R.string.try_again), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Connexion();
-                                        }
-                                    });
-
-                            snackbar.show();
-                            progressBar.setVisibility(View.GONE);
-                        }else if(error instanceof TimeoutError)
-                        {
-                            snackbar = Snackbar
-                                    .make(coordinatorLayout, res.getString(R.string.error_volley_timeouterror), Snackbar.LENGTH_LONG)
-                                    .setAction(res.getString(R.string.try_again), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Connexion();
-                                        }
-                                    });
-                            snackbar.show();
-                            progressBar.setVisibility(View.GONE);
-                        }else
-                        {
-                            snackbar = Snackbar
-                                    .make(coordinatorLayout, res.getString(R.string.error_volley_error), Snackbar.LENGTH_LONG)
-                                    .setAction(res.getString(R.string.try_again), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            Connexion();
-                                        }
-                                    });
-
-                            snackbar.show();
-                            progressBar.setVisibility(View.GONE);
-                        }
+                        Toast.makeText(context,"Une erreure s'est produite votre commentaire n'a pas ete ajoute",Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("ID_MESSAGE",String.valueOf(intent.getIntExtra("nom",0)));
-                params.put("ID_USER",String.valueOf(user.getID()));
-                params.put("LIBELLE",Libelle);//editcomment.getText().toString());
                 return params;
             }
 
@@ -429,7 +383,7 @@ public class AfficheCommentairePublic extends AppCompatActivity{
         requestQueue.add(stringRequest);
     }
 
-    public void CastTime()
+    /*public void CastTime()
     {
         if(seconde>9)
         {
@@ -464,6 +418,6 @@ public class AfficheCommentairePublic extends AppCompatActivity{
         } else if (month < 9 && day < 9) {
             Jour = year+":0"+(month+1)+":0"+day;
         }
-    }
+    }*/
 
 }

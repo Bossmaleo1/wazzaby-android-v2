@@ -1,10 +1,14 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 android {
     compileSdkVersion 28
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.wazaby.android.wazaby"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -35,6 +39,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.github.yalantis:ucrop:2.2.2'
+    implementation "com.karumi:dexter:5.0.0"
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'net.gotev:uploadservice:2.1'
+    implementation "org.apache.httpcomponents:httpmime:4.2.3"
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+    implementation 'com.github.hani-momanii:SuperNova-Emoji:1.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

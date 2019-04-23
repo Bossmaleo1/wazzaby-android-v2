@@ -33,6 +33,10 @@ import java.util.List;
 
 import static android.support.v4.content.ContextCompat.startActivity;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 /**
  * Created by bossmaleo on 09/11/17.
  */
@@ -147,7 +151,7 @@ public class ConversationspublicAdapter extends RecyclerView.Adapter<Conversatio
     {
         TextView title;
         TextView title1;
-        TextView contenu;
+        EmojiconTextView contenu;
         TextView commentnumber;
         ImageView picture;
         ImageView commenticon;
@@ -161,7 +165,7 @@ public class ConversationspublicAdapter extends RecyclerView.Adapter<Conversatio
             super(itemView);
             title = (TextView)itemView.findViewById(R.id.title);
             title1 = (TextView)itemView.findViewById(R.id.title1);
-            contenu = (TextView) itemView.findViewById(R.id.contenu);
+            contenu =  itemView.findViewById(R.id.contenu);
             commentnumber = (TextView) itemView.findViewById(R.id.contenucomment);
             picture = (ImageView) itemView.findViewById(R.id.icon);
             commenticon = (ImageView) itemView.findViewById(R.id.commenticon);

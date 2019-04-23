@@ -3,21 +3,36 @@ package com.wazaby.android.wazaby.connInscript;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.wazaby.android.wazaby.R;
 import com.wazaby.android.wazaby.appviews.Home;
 import com.wazaby.android.wazaby.model.Database.SessionManager;
+import com.wazaby.android.wazaby.model.dao.DatabaseHandler;
+import com.wazaby.android.wazaby.model.data.Profil;
 
 public class MainActivity extends AppCompatActivity {
+
     private SessionManager session;
+    private RelativeLayout block;
+    private Profil user;
+    private DatabaseHandler database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        block = findViewById(R.id.block);
+        database = new DatabaseHandler(this);
         session = new SessionManager(this);
+        if(!String.valueOf(session.getUserDetail().get(SessionManager.Key_ID)).equals("null"))
+        {
+            user = database.getUSER(Integer.valueOf(session.getUserDetail().get(SessionManager.Key_ID)));
+        }
+
         Thread background = new Thread() {
             public void run() {
-
 
                 try {
 
@@ -27,8 +42,14 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(i);
                     }else
                     {
-                        Intent i = new Intent(getApplicationContext(), Home.class);
-                        startActivity(i);
+                        if(user.getIDPROB().equals("yoyo"))
+                        {
+                            Intent i = new Intent(getApplicationContext(), ProblematiqueConnexion.class);
+                            startActivity(i);
+                        }else {
+                            Intent i = new Intent(getApplicationContext(), Home.class);
+                            startActivity(i);
+                        }
                     }
                     finish();
 

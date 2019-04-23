@@ -1,16 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
   <item
       android:id="@+id/add_picture"
       android:title="@string/inscript"
-      android:icon="@drawable/ic_add_a_photo_black_18dp"
+      android:icon="@drawable/baseline_add_a_photo_black_48"
       app:showAsAction="ifRoom" />
 
   <item
       android:id="@+id/insert_picture"
       android:title="@string/inscript"
-      android:icon="@drawable/ic_insert_photo_black_18dp"
+      android:icon="@drawable/baseline_add_photo_alternate_black_48"
       app:showAsAction="ifRoom" />
 
 

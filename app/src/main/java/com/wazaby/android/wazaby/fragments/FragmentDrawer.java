@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.wazaby.android.wazaby.R;
@@ -97,10 +98,15 @@ public class FragmentDrawer extends Fragment {
     nom = (TextView)layout.findViewById(R.id.welcome_msg);
     imageView = (de.hdodenhof.circleimageview.CircleImageView)layout.findViewById(R.id.ic_profile);
     nom.setText(user.getPRENOM()+" "+user.getNOM());
-    if(!user.getPHOTO().equals("null")) {
-      Glide.with(getActivity())
-              .load(Const.dns+"/uploads/photo_de_profil/" + user.getPHOTO())
-              .into(imageView);
+
+    if(!user.getPHOTO().equals("null") && !user.getPHOTO().isEmpty()) {
+     if(user.getPHOTO().equals("yo")) {
+       imageView.setImageResource(R.drawable.ic_profile);
+     }else {
+       Glide.with(getActivity())
+               .load(Const.dns+"/uploads/photo_de_profil/" + user.getPHOTO())
+               .into(imageView);
+     }
     }else
     {
       imageView.setImageResource(R.drawable.ic_profile);

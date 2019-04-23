@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.wazaby.android.wazaby.R;
+import com.wazaby.android.wazaby.model.Const;
 import com.wazaby.android.wazaby.model.Database.SessionManager;
 import com.wazaby.android.wazaby.model.dao.DatabaseHandler;
 import com.wazaby.android.wazaby.model.data.Profil;
@@ -62,9 +63,9 @@ public class friendonlineAdapter  extends RecyclerView.Adapter<friendonlineAdapt
         //database = new DatabaseHandler(current.getContext1());
         //session = new SessionManager(current.getContext1());
         // user = database.getUSER(Integer.valueOf(session.getUserDetail().get(SessionManager.Key_ID)));
-        if(!current.getImageID().equals("null")) {
+        if(current.getImageID().length()>0) {
             Glide.with(current.getContext1())
-                    .load("https://wazaby939393.000webhostapp.com/Images/" + current.getImageID())
+                    .load(Const.dns+"/uploads/photo_de_profil/" + current.getImageID())
                     .into(holder.icon);
         }else
         {

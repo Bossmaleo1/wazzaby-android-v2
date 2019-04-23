@@ -4,10 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -55,6 +58,9 @@ public class forminscript3 extends AppCompatActivity {
     private LinearLayout code_block;
     private LinearLayout email_block;
     private TextView message;
+    private String getEmail;
+    private String getCode_de_verfication;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,7 @@ public class forminscript3 extends AppCompatActivity {
         message = (TextView) findViewById(R.id.message);
         email_block = (LinearLayout) findViewById(R.id.email_block);
         code_block = (LinearLayout) findViewById(R.id.code_block);
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,12 +88,15 @@ public class forminscript3 extends AppCompatActivity {
                         pDialog.setIndeterminate(false);
                         pDialog.setCancelable(false);
                         pDialog.show();
+                        getCode_de_verfication = code_de_verfication;
                         volley_de_verification_de_email();
                     }else if(code_verification_edittext.getText().length()!=0)
                     {
 
                         if (String.valueOf(code_de_verfication).trim().equals(String.valueOf(code_verification_edittext.getText()).trim())) {
                             Intent intent = new Intent(getApplicationContext(), forminscript2.class);
+                            intent.putExtra("email",getEmail);
+                            intent.putExtra("code",String.valueOf(code_verification_edittext.getText()).trim());
                             startActivity(intent);
                         } else {
                             Toast.makeText(forminscript3.this,"Vous avez introduit le mauvais code de verification !!! ",Toast.LENGTH_LONG).show();
@@ -137,6 +147,7 @@ public class forminscript3 extends AppCompatActivity {
     private void volley_de_verification_de_email()
     {
         String url_connexion = Const.dns+"/WazzabyApiOthers/send_mail.php?email="+String.valueOf(email.getText()) ;
+        this.getEmail = String.valueOf(email.getText());
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url_connexion,
                 new Response.Listener<String>() {
                     @Override
@@ -217,5 +228,14 @@ public class forminscript3 extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*Intent _result = new Intent(getApplicationContext(),forminscript3.class);
+        startActivity(_result);*/
+        Intent i = new Intent();
+        setResult(RESULT_OK, i);
+        finish();
     }
 }

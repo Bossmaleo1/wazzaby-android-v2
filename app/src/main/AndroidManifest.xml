@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -49,11 +52,33 @@
 
         </activity>
 
+        <activity android:name=".connInscript.ProblematiqueConnexion" android:theme="@style/AppTheme2">
+
+        </activity>
+
         <activity android:name=".connInscript.forminscript3" android:theme="@style/AppTheme2">
 
         </activity>
 
-        <activity android:name=".connInscript.UploadImage" android:theme="@style/AppTheme2">
+        <activity android:name=".connInscript.forinscript4" android:theme="@style/AppTheme2">
+
+        </activity>
+
+        <activity android:name=".connInscript.UploadImage"
+            android:theme="@style/AppTheme2"
+            >
+
+        </activity>
+
+        <activity android:name=".connInscript.ImagePickerActivity"
+            android:theme="@style/AppTheme2"
+            >
+
+        </activity>
+
+        <activity android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme2">
 
         </activity>
 
@@ -62,6 +87,10 @@
         </activity>
 
         <activity android:name=".appviews.Sharepublicconversation" android:theme="@style/AppTheme3">
+
+        </activity>
+
+        <activity android:name=".appviews.Test" android:theme="@style/AppTheme3">
 
         </activity>
 
@@ -92,6 +121,16 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

@@ -63,14 +63,15 @@ public class forminscript1 extends AppCompatActivity implements LocationListener
         snackbar.show();*/
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(forminscript1.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-        } else {
+        } else {*/
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 2, this);
             if (locationManager != null) {
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             }
-        }
+            //Toast.makeText(,,Toast.).show();
+        //}
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             if (location != null) {
                 /*latitude.setText(String.valueOf(location.getLatitude()));
@@ -79,7 +80,10 @@ public class forminscript1 extends AppCompatActivity implements LocationListener
 
             }
         } else {
-            showGPSDisabledAlertToUser();
+            if (location != null) {
+                getAddressFromLocation(location, getApplicationContext(), new GeoCoderHandler());
+            }
+            //showGPSDisabledAlertToUser();
         }
 
     }
@@ -145,10 +149,11 @@ public class forminscript1 extends AppCompatActivity implements LocationListener
             if(!splitarray[3].equals("") && !splitarray[4].equals("") && ok)
             {
                 ok = false;
-                Intent intent = new Intent(getApplicationContext(),forminscript2.class);
+                /*Intent intent = new Intent(getApplicationContext(),forminscript2.class);
                 intent.putExtra("Ville",splitarray[3]);
                 intent.putExtra("Pays",splitarray[4]);
-                startActivity(intent);
+                startActivity(intent);*/
+                Toast.makeText(forminscript1.this,"Ville : "+splitarray[3],Toast.LENGTH_LONG).show();
             }
 
 
@@ -210,8 +215,8 @@ public class forminscript1 extends AppCompatActivity implements LocationListener
                 .setCancelable(false)
                 .setPositiveButton("Goto Settings Page To Enable GPS", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        /*Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(callGPSSettingIntent);*/
+                        Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(callGPSSettingIntent);
 
                         //met ça ici le code du settings
 
